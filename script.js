@@ -8,6 +8,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+  // ========== Mobile Navigation Toggle ==========
+  const navToggle = document.getElementById('nav-toggle');
+  const navMobile = document.getElementById('nav-mobile');
+
+  if (navToggle && navMobile) {
+    navToggle.addEventListener('click', () => {
+      navToggle.classList.toggle('active');
+      navMobile.classList.toggle('active');
+    });
+
+    // Close mobile nav when clicking a link
+    const mobileLinks = navMobile.querySelectorAll('.nav-mobile__link');
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        navToggle.classList.remove('active');
+        navMobile.classList.remove('active');
+      });
+    });
+  }
+
   // ========== Scroll Progress Bar ==========
   const scrollProgress = document.getElementById('scroll-progress');
   if (scrollProgress) {

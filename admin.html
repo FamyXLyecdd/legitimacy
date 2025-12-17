@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Legitimacy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .admin-page {
+            min-height: 100vh;
+            padding: var(--space-8);
+            background: var(--bg-base);
+        }
+
+        .admin-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .admin-header {
+            text-align: center;
+            margin-bottom: var(--space-8);
+        }
+
+        .admin-header__title {
+            font-family: var(--font-display);
+            font-size: var(--text-3xl);
+            font-weight: 800;
+            color: var(--charcoal);
+            margin-bottom: var(--space-2);
+        }
+
+        .admin-header__subtitle {
+            color: var(--smoke);
+        }
+
+        /* Login Form */
+        .login-form {
+            background: white;
+            padding: var(--space-8);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-medium);
+            max-width: 400px;
+            margin: 100px auto;
+            text-align: center;
+        }
+
+        .login-form__title {
+            font-family: var(--font-display);
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            margin-bottom: var(--space-6);
+        }
+
+        .login-form__input {
+            width: 100%;
+            padding: var(--space-4);
+            border: 2px solid var(--sand);
+            border-radius: var(--radius-md);
+            font-size: var(--text-base);
+            margin-bottom: var(--space-4);
+            text-align: center;
+        }
+
+        .login-form__input:focus {
+            outline: none;
+            border-color: var(--coral);
+        }
+
+        .login-form__error {
+            color: #ef4444;
+            font-size: var(--text-sm);
+            margin-bottom: var(--space-4);
+            display: none;
+        }
+
+        /* Upload Section */
+        .upload-section {
+            background: white;
+            padding: var(--space-6);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-medium);
+            margin-bottom: var(--space-6);
+        }
+
+        .upload-section__title {
+            font-family: var(--font-display);
+            font-size: var(--text-xl);
+            font-weight: 700;
+            margin-bottom: var(--space-4);
+        }
+
+        .form-group {
+            margin-bottom: var(--space-4);
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: var(--space-2);
+            color: var(--charcoal);
+        }
+
+        .form-group select,
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: var(--space-3);
+            border: 2px solid var(--sand);
+            border-radius: var(--radius-md);
+            font-size: var(--text-base);
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--coral);
+        }
+
+        .file-upload {
+            border: 2px dashed var(--sand);
+            border-radius: var(--radius-lg);
+            padding: var(--space-8);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: var(--space-4);
+        }
+
+        .file-upload:hover {
+            border-color: var(--coral);
+            background: rgba(255, 107, 107, 0.05);
+        }
+
+        .file-upload.dragover {
+            border-color: var(--coral);
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .file-upload__icon {
+            font-size: 48px;
+            margin-bottom: var(--space-2);
+        }
+
+        .file-upload__text {
+            color: var(--smoke);
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .preview-image {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: var(--radius-md);
+            margin: var(--space-4) auto;
+            display: none;
+        }
+
+        .upload-status {
+            text-align: center;
+            padding: var(--space-4);
+            border-radius: var(--radius-md);
+            margin-top: var(--space-4);
+            display: none;
+        }
+
+        .upload-status.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            display: block;
+        }
+
+        .upload-status.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            display: block;
+        }
+
+        .upload-status.loading {
+            background: rgba(139, 92, 246, 0.1);
+            color: #8b5cf6;
+            display: block;
+        }
+
+        /* Image List */
+        .image-list {
+            background: white;
+            padding: var(--space-6);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .image-list__title {
+            font-family: var(--font-display);
+            font-size: var(--text-xl);
+            font-weight: 700;
+            margin-bottom: var(--space-4);
+        }
+
+        .image-list__category {
+            margin-bottom: var(--space-6);
+        }
+
+        .image-list__category-title {
+            font-weight: 600;
+            color: var(--smoke);
+            text-transform: uppercase;
+            font-size: var(--text-sm);
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-3);
+            padding-bottom: var(--space-2);
+            border-bottom: 2px solid var(--sand-light);
+        }
+
+        .image-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            padding: var(--space-3);
+            background: var(--sand-light);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-2);
+        }
+
+        .image-item__thumb {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+        }
+
+        .image-item__info {
+            flex: 1;
+        }
+
+        .image-item__caption {
+            font-weight: 600;
+            color: var(--charcoal);
+        }
+
+        .image-item__date {
+            font-size: var(--text-xs);
+            color: var(--smoke);
+        }
+
+        .image-item__delete {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: var(--text-sm);
+            transition: all 0.2s ease;
+        }
+
+        .image-item__delete:hover {
+            background: #dc2626;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--smoke);
+            padding: var(--space-8);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+            padding: var(--space-3) var(--space-6);
+            background: var(--gradient-coral);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-coral);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            color: var(--coral);
+            font-weight: 600;
+            margin-bottom: var(--space-6);
+        }
+
+        .back-link:hover {
+            gap: var(--space-3);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="admin-page">
+        <div class="login-form">
+            <div class="login-form__title">🔐 Admin Access</div>
+            <input type="password" id="password-input" class="login-form__input" placeholder="Enter password">
+            <div id="login-error" class="login-form__error">Incorrect password</div>
+            <button class="btn" onclick="checkPassword()">Enter</button>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="admin-panel" class="admin-page hidden">
+        <div class="admin-container">
+            <a href="proofs.html" class="back-link">
+                ← Back to Gallery
+            </a>
+
+            <div class="admin-header">
+                <h1 class="admin-header__title">📸 Image Manager</h1>
+                <p class="admin-header__subtitle">Upload and manage your proof images</p>
+            </div>
+
+            <!-- Upload Section -->
+            <div class="upload-section">
+                <h2 class="upload-section__title">Upload New Image</h2>
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="category-select">
+                        <option value="success">Success</option>
+                        <option value="proofs">Proofs</option>
+                        <option value="services">Services</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Caption</label>
+                    <input type="text" id="caption-input" placeholder="e.g., 10K Robux Transaction">
+                </div>
+
+                <div class="file-upload" id="file-upload">
+                    <div class="file-upload__icon">📁</div>
+                    <div class="file-upload__text">Click to select image or drag & drop</div>
+                    <input type="file" id="file-input" accept="image/*">
+                </div>
+
+                <img id="preview-image" class="preview-image" alt="Preview">
+
+                <button class="btn" id="upload-btn" onclick="uploadImage()" disabled>
+                    Upload Image
+                </button>
+
+                <div id="upload-status" class="upload-status"></div>
+            </div>
+
+            <!-- Uploaded Images List -->
+            <div class="image-list">
+                <h2 class="image-list__title">Uploaded Images</h2>
+                <div id="images-container">
+                    <div class="empty-state">Loading images...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // 🔐 SECURITY CONFIGURATION
+        // ============================================
+        const SECURITY = {
+            // SHA-256 hash of your password (change this!)
+            // To generate: go to https://emn178.github.io/online-tools/sha256.html
+            // Enter your password, copy the hash, paste here
+            passwordHash: '9190c8c76f740f92e43667556656b9db5b5d6d579b0911aba450e641357bdaaa', // This is hash of "password" - CHANGE IT!
+
+            maxAttempts: 5,           // Lock after 5 failed attempts
+            lockoutMinutes: 15,       // Lock for 15 minutes
+            sessionMinutes: 60,       // Session expires after 60 minutes
+
+            // API Keys
+            imgbbApiKey: '285162a0bd8f4cd3067d451ea23a8baa',
+            jsonbinApiKey: '$2a$10$DnPw4EX77NPR.T6Mk2foF.2VA0cuFVrulBpGSYauTUXoxUbnAn9ZO'
+        };
+
+        // Storage keys
+        const STORAGE_KEYS = {
+            binId: 'legitimacy_bin_id',
+            attempts: 'admin_attempts',
+            lockUntil: 'admin_lock_until',
+            session: 'admin_session'
+        };
+
+        // ============================================
+        // SHA-256 HASHING FUNCTION
+        // ============================================
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // ============================================
+        // SECURITY FUNCTIONS
+        // ============================================
+        function isLockedOut() {
+            const lockUntil = localStorage.getItem(STORAGE_KEYS.lockUntil);
+            if (!lockUntil) return false;
+
+            if (Date.now() < parseInt(lockUntil)) {
+                return true;
+            } else {
+                // Lockout expired, reset
+                localStorage.removeItem(STORAGE_KEYS.lockUntil);
+                localStorage.removeItem(STORAGE_KEYS.attempts);
+                return false;
+            }
+        }
+
+        function getLockoutRemaining() {
+            const lockUntil = localStorage.getItem(STORAGE_KEYS.lockUntil);
+            if (!lockUntil) return 0;
+            const remaining = parseInt(lockUntil) - Date.now();
+            return Math.max(0, Math.ceil(remaining / 60000)); // minutes
+        }
+
+        function getAttempts() {
+            return parseInt(localStorage.getItem(STORAGE_KEYS.attempts) || '0');
+        }
+
+        function incrementAttempts() {
+            const attempts = getAttempts() + 1;
+            localStorage.setItem(STORAGE_KEYS.attempts, attempts.toString());
+
+            if (attempts >= SECURITY.maxAttempts) {
+                // Lock the account
+                const lockUntil = Date.now() + (SECURITY.lockoutMinutes * 60 * 1000);
+                localStorage.setItem(STORAGE_KEYS.lockUntil, lockUntil.toString());
+            }
+
+            return attempts;
+        }
+
+        function resetAttempts() {
+            localStorage.removeItem(STORAGE_KEYS.attempts);
+            localStorage.removeItem(STORAGE_KEYS.lockUntil);
+        }
+
+        function createSession() {
+            const expiry = Date.now() + (SECURITY.sessionMinutes * 60 * 1000);
+            const sessionData = { expiry, token: crypto.randomUUID() };
+            localStorage.setItem(STORAGE_KEYS.session, JSON.stringify(sessionData));
+        }
+
+        function isValidSession() {
+            const sessionStr = localStorage.getItem(STORAGE_KEYS.session);
+            if (!sessionStr) return false;
+
+            try {
+                const session = JSON.parse(sessionStr);
+                return Date.now() < session.expiry;
+            } catch {
+                return false;
+            }
+        }
+
+        function clearSession() {
+            localStorage.removeItem(STORAGE_KEYS.session);
+        }
+
+        // ============================================
+        // PASSWORD CHECK WITH SECURITY
+        // ============================================
+        async function checkPassword() {
+            const errorEl = document.getElementById('login-error');
+            const input = document.getElementById('password-input').value;
+            const btn = document.querySelector('.login-form .btn');
+
+            // Check if locked out
+            if (isLockedOut()) {
+                const remaining = getLockoutRemaining();
+                errorEl.textContent = `🔒 Too many attempts. Try again in ${remaining} minutes.`;
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            // Disable button during check
+            btn.disabled = true;
+            btn.textContent = 'Checking...';
+
+            try {
+                // Hash the input and compare
+                const inputHash = await sha256(input);
+
+                // Add small delay to prevent timing attacks
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                if (inputHash === SECURITY.passwordHash) {
+                    // Success!
+                    resetAttempts();
+                    createSession();
+                    document.getElementById('login-screen').classList.add('hidden');
+                    document.getElementById('admin-panel').classList.remove('hidden');
+                    loadImages();
+                } else {
+                    // Failed
+                    const attempts = incrementAttempts();
+                    const remaining = SECURITY.maxAttempts - attempts;
+
+                    if (remaining > 0) {
+                        errorEl.textContent = `❌ Incorrect password. ${remaining} attempts remaining.`;
+                    } else {
+                        const lockMins = SECURITY.lockoutMinutes;
+                        errorEl.textContent = `🔒 Account locked for ${lockMins} minutes.`;
+                    }
+                    errorEl.style.display = 'block';
+                }
+            } catch (error) {
+                errorEl.textContent = '❌ Security error. Please try again.';
+                errorEl.style.display = 'block';
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Enter';
+        }
+
+        // Check for existing session on page load
+        if (isValidSession()) {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('admin-panel').classList.remove('hidden');
+            // Load images after DOM is ready
+            document.addEventListener('DOMContentLoaded', loadImages);
+        }
+
+        // Update lockout display on page load
+        if (isLockedOut()) {
+            const remaining = getLockoutRemaining();
+            const errorEl = document.getElementById('login-error');
+            errorEl.textContent = `🔒 Account locked. Try again in ${remaining} minutes.`;
+            errorEl.style.display = 'block';
+        }
+
+        // Allow Enter key for password
+        document.getElementById('password-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkPassword();
+        });
+
+        // ============================================
+        // FILE UPLOAD HANDLING
+        // ============================================
+        const fileUpload = document.getElementById('file-upload');
+        const fileInput = document.getElementById('file-input');
+        const previewImage = document.getElementById('preview-image');
+        const uploadBtn = document.getElementById('upload-btn');
+
+        fileUpload.addEventListener('click', () => fileInput.click());
+
+        fileUpload.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileUpload.classList.add('dragover');
+        });
+
+        fileUpload.addEventListener('dragleave', () => {
+            fileUpload.classList.remove('dragover');
+        });
+
+        fileUpload.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileUpload.classList.remove('dragover');
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                handleFileSelect();
+            }
+        });
+
+        fileInput.addEventListener('change', handleFileSelect);
+
+        function handleFileSelect() {
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
+                    uploadBtn.disabled = false;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // ============================================
+        // IMAGE UPLOAD TO IMGBB
+        // ============================================
+        async function uploadImage() {
+            const file = fileInput.files[0];
+            const caption = document.getElementById('caption-input').value || 'Untitled';
+            const category = document.getElementById('category-select').value;
+            const statusEl = document.getElementById('upload-status');
+
+            if (!file) return;
+
+            // Show loading
+            statusEl.className = 'upload-status loading';
+            statusEl.textContent = '⏳ Uploading image...';
+            uploadBtn.disabled = true;
+
+            try {
+                // Upload to ImgBB
+                const formData = new FormData();
+                formData.append('image', file);
+
+                const imgbbResponse = await fetch(`https://api.imgbb.com/1/upload?key=${SECURITY.imgbbApiKey}`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const imgbbData = await imgbbResponse.json();
+
+                if (!imgbbData.success) {
+                    throw new Error('Failed to upload image');
+                }
+
+                const imageUrl = imgbbData.data.url;
+                const thumbUrl = imgbbData.data.thumb?.url || imageUrl;
+
+                // Save to JSONbin
+                statusEl.textContent = '⏳ Saving to database...';
+
+                await saveImageToDatabase({
+                    id: Date.now().toString(),
+                    url: imageUrl,
+                    thumb: thumbUrl,
+                    caption: caption,
+                    category: category,
+                    date: new Date().toLocaleDateString()
+                });
+
+                // Success
+                statusEl.className = 'upload-status success';
+                statusEl.textContent = '✅ Image uploaded successfully!';
+
+                // Reset form
+                fileInput.value = '';
+                previewImage.style.display = 'none';
+                document.getElementById('caption-input').value = '';
+                uploadBtn.disabled = true;
+
+                // Reload images
+                loadImages();
+
+            } catch (error) {
+                console.error('Upload error:', error);
+                statusEl.className = 'upload-status error';
+                statusEl.textContent = '❌ Upload failed: ' + error.message;
+                uploadBtn.disabled = false;
+            }
+        }
+
+        // ============================================
+        // JSONBIN DATABASE OPERATIONS
+        // ============================================
+        async function getBinId() {
+            let binId = localStorage.getItem(STORAGE_KEYS.binId);
+
+            if (!binId) {
+                // Create new bin
+                const response = await fetch('https://api.jsonbin.io/v3/b', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': SECURITY.jsonbinApiKey,
+                        'X-Bin-Name': 'legitimacy-proofs'
+                    },
+                    body: JSON.stringify({
+                        success: [],
+                        proofs: [],
+                        services: []
+                    })
+                });
+
+                const data = await response.json();
+                binId = data.metadata.id;
+                localStorage.setItem(STORAGE_KEYS.binId, binId);
+            }
+
+            return binId;
+        }
+
+        async function loadImages() {
+            const container = document.getElementById('images-container');
+
+            try {
+                const binId = await getBinId();
+
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
+                    headers: {
+                        'X-Master-Key': SECURITY.jsonbinApiKey
+                    }
+                });
+
+                const data = await response.json();
+                const images = data.record;
+
+                renderImages(images);
+
+            } catch (error) {
+                console.error('Load error:', error);
+                container.innerHTML = '<div class="empty-state">Failed to load images</div>';
+            }
+        }
+
+        async function saveImageToDatabase(imageData) {
+            const binId = await getBinId();
+
+            // Get current data
+            const getResponse = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
+                headers: {
+                    'X-Master-Key': SECURITY.jsonbinApiKey
+                }
+            });
+
+            const currentData = (await getResponse.json()).record;
+
+            // Add new image
+            currentData[imageData.category].push(imageData);
+
+            // Update bin
+            await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': SECURITY.jsonbinApiKey
+                },
+                body: JSON.stringify(currentData)
+            });
+        }
+
+        async function deleteImage(category, imageId) {
+            if (!confirm('Delete this image?')) return;
+
+            try {
+                const binId = await getBinId();
+
+                // Get current data
+                const getResponse = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
+                    headers: {
+                        'X-Master-Key': SECURITY.jsonbinApiKey
+                    }
+                });
+
+                const currentData = (await getResponse.json()).record;
+
+                // Remove image
+                currentData[category] = currentData[category].filter(img => img.id !== imageId);
+
+                // Update bin
+                await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': SECURITY.jsonbinApiKey
+                    },
+                    body: JSON.stringify(currentData)
+                });
+
+                loadImages();
+
+            } catch (error) {
+                console.error('Delete error:', error);
+                alert('Failed to delete image');
+            }
+        }
+
+        function renderImages(data) {
+            const container = document.getElementById('images-container');
+            const categories = ['success', 'proofs', 'services'];
+            const labels = { success: '✅ Success', proofs: '📸 Proofs', services: '⚡ Services' };
+
+            let html = '';
+
+            categories.forEach(cat => {
+                const images = data[cat] || [];
+                html += `
+                    <div class="image-list__category">
+                        <div class="image-list__category-title">${labels[cat]} (${images.length})</div>
+                        ${images.length === 0
+                        ? '<div class="empty-state">No images yet</div>'
+                        : images.map(img => `
+                                <div class="image-item">
+                                    <img src="${img.thumb || img.url}" class="image-item__thumb" alt="${img.caption}">
+                                    <div class="image-item__info">
+                                        <div class="image-item__caption">${img.caption}</div>
+                                        <div class="image-item__date">${img.date}</div>
+                                    </div>
+                                    <button class="image-item__delete" onclick="deleteImage('${cat}', '${img.id}')">Delete</button>
+                                </div>
+                            `).join('')
+                    }
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+    </script>
+</body>
+
+</html>
